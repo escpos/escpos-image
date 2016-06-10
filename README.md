@@ -18,6 +18,10 @@ Or install it yourself as:
 
     $ gem install escpos-image
 
+## Examples
+
+![](https://github.com/escpos/escpos-image/blob/master/examples/IMG_20160610_232415_HDR.jpg)
+
 ## Usage
 
 ```ruby
