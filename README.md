@@ -35,6 +35,7 @@ image = Escpos::Image.new 'path/to/image.png', convert_to_monochrome: true
 # with serial port printer it can be sent directly to the serial port
 
 @printer.to_base64 # returns base64 encoded ESC/POS data
+```
 
 ## Contributing
 
