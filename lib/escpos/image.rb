@@ -55,6 +55,10 @@ module Escpos
 
     private
 
+    # !!!
+    # Please note that MiniMagick gem is not required _intentionally_
+    # This makes the gem more lightweight by making this dependency optional
+    # !!!
     def require_mini_magick!
       unless defined?(MiniMagick)
         begin 
@@ -70,9 +74,9 @@ module Escpos
       image.flatten
       image.grayscale 'Rec709Luma'
       if opts.fetch(:dither, true)
-        image.monochrome
-      else
         image.monochrome '+dither'
+      else
+        image.monochrome
       end
       if opts.fetch(:extent, true)
         image.extent "#{(image.width/8.0).round*8}x#{(image.height/8.0).round*8}"
