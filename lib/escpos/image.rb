@@ -1,7 +1,7 @@
 module Escpos
   class Image
 
-    VERSION = "0.0.1"
+    VERSION = "0.0.2"
 
     def initialize(image_path, opts = {})
       if opts.fetch(:convert_to_monochrome, false)
