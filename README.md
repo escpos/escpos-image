@@ -18,6 +18,10 @@ Or install it yourself as:
 
     $ gem install escpos-image
 
+## Examples
+
+![](https://github.com/escpos/escpos-image/blob/master/examples/IMG_20160610_232415_HDR.jpg)
+
 ## Usage
 
 ```ruby
@@ -25,7 +29,11 @@ Or install it yourself as:
 
 image = Escpos::Image.new 'path/to/image.png'
 # to use automatic conversion to monochrome format (requires mini_magick gem) use:
-image = Escpos::Image.new 'path/to/image.png', convert_to_monochrome: true
+image = Escpos::Image.new 'path/to/image.png', {
+  convert_to_monochrome: true,
+  dither: true, # the default
+  extent: true, # the default
+}
 
 @printer.write image.to_escpos
 
