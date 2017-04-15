@@ -73,8 +73,8 @@ module Escpos
       image = MiniMagick::Image.open(image_path)
       image.collapse!  # Get the first image out of animated gifs
       image.combine_options do |c| # Optimise a few actions 
-         unless opts.fetch(:resize).nil?
-            c.resize opts.fetch(:resize)        # Resize to fit on page (maintains aspect, fits to largest side)
+         if opts.key?(:resize)
+            c.resize opts.fetch(:resize)     # Resize to fit on page (maintains aspect, fits to largest side)
          end
          c.grayscale 'Rec709Luma'                       # Grayscale
          if opts.fetch(:dither, true)
