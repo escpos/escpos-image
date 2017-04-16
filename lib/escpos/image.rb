@@ -72,11 +72,10 @@ module Escpos
     def convert_to_monochrome(image_path, opts = {})
       image = MiniMagick::Image.open(image_path)
       image.collapse!  # Get the first image out of animated gifs
-      image.combine_options do |c| # Optimise a few actions 
-         if opts.key?(:resize)
-            c.resize opts.fetch(:resize)     # Resize to fit on page (maintains aspect, fits to largest side)
-         end
-         c.grayscale 'Rec709Luma'                       # Grayscale
+      image.combine_options do |c| # Optimise a few actions
+         c.rotate opts.fetch(:rotate) if opts.key?(:rotate)   # Rotate if required
+         c.resize opts.fetch(:resize) if opts.key?(:resize)   # Resize to fit the page
+         c.grayscale 'Rec709Luma'                             # Grayscale
          if opts.fetch(:dither, true)
            c.monochrome # Dither is ON by default
          else
@@ -90,6 +89,5 @@ module Escpos
       image.format 'png' # Always to PNG for ChunkyPNG to work
       image
     end
-
   end
 end
