@@ -1,6 +1,6 @@
 require_relative '../../test_helper'
 
-class TestPrinter < Minitest::Test
+class ImageTest < Minitest::Test
   def setup
     @printer = Escpos::Printer.new
   end

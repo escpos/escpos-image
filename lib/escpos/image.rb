@@ -71,7 +71,7 @@ module Escpos
         begin 
           require 'mini_magick'
         rescue LoadError => e
-          raise 'Required options need the mini_magick gem installed.'
+          raise "Required options need the mini_magick gem installed: #{e}."
         end
       end
     end
