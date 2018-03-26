@@ -1,4 +1,3 @@
-# coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'escpos/image'
@@ -23,7 +22,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "bundler"
   spec.add_development_dependency "rake"
 
-  spec.add_development_dependency "minitest", "~> 5.4.2"
+  spec.add_development_dependency "minitest", "~> 5.4"
 
   spec.add_dependency "escpos"
   spec.add_dependency "chunky_png"

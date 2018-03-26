@@ -1,0 +1,22 @@
+image: ruby:2.5
+
+cache:
+  paths:
+    - vendor/ruby
+
+stages:
+  - test
+
+before_script:
+  - ruby -v
+  - bundle -v
+  - bundle install --jobs $(nproc) --path vendor
+  - apt-get install -y imagemagick
+  - gem install mini_magick
+
+test:
+  stage: test
+  script:
+    - rake test
+  environment:
+    name: test
