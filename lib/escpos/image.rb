@@ -3,13 +3,15 @@ module Escpos
 
     VERSION = "0.0.3"
 
-    def initialize(image_path, opts = {})
-      if opts.fetch(:convert_to_monochrome, false)
+    def initialize(image_or_path, opts = {})
+      if image_or_path.is_a?(ChunkyPNG::Image)
+        @image = image_or_path
+      elsif opts.fetch(:convert_to_monochrome, false)
         require_mini_magick!
-        image = convert_to_monochrome(image_path, opts)
+        image = convert_to_monochrome(image_or_path, opts)
         @image = ChunkyPNG::Image.from_file(image.path)
       else
-        @image = ChunkyPNG::Image.from_file(image_path)
+        @image = ChunkyPNG::Image.from_file(image_or_path)
       end
 
       unless @image.width % 8 == 0 && @image.height % 8 == 0
