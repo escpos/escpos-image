@@ -31,11 +31,8 @@ module Escpos
             ChunkyPNG::Color.b(@image[x, y]),
             ChunkyPNG::Color.a(@image[x, y])
           px = (r + g + b) / 3
-          # Alpha is flattened with convert_to_monochrome option
-          unless a == 255
-            raise ArgumentError.new("PNG images with alpha are not supported. Use \"convert_to_monochrome\" to flatten it.")
-          end
-          value = px > 128 ? 255 : 0
+          px += ((255 - px) * (1 - a / 255.0)).floor unless a == 255
+          value = px >= 128 ? 255 : 0
           value = (value << 8) | value
           temp |= mask if value == 0
           mask = mask >> 1
