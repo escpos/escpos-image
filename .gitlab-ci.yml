@@ -1,4 +1,4 @@
-image: ruby:2.5
+image: ruby:2.6
 
 cache:
   paths:
@@ -17,6 +17,6 @@ before_script:
 test:
   stage: test
   script:
-    - rake test
+    - bundle exec rake test
   environment:
     name: test
