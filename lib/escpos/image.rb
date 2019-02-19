@@ -1,15 +1,21 @@
 module Escpos
   class Image
 
-    VERSION = "0.0.3"
+    VERSION = "0.0.4"
 
-    def initialize(image_path, opts = {})
-      if opts.fetch(:convert_to_monochrome, false)
-        require_mini_magick!
-        image = convert_to_monochrome(image_path, opts)
-        @image = ChunkyPNG::Image.from_file(image.path)
+    def initialize(image_or_path, opts = {})
+      if image_or_path.is_a?(ChunkyPNG::Image)
+        @image = image_or_path
+      elsif image_or_path.is_a?(String)
+        if opts.fetch(:convert_to_monochrome, false)
+          require_mini_magick!
+          image = convert_to_monochrome(image_or_path, opts)
+          @image = ChunkyPNG::Image.from_file(image.path)
+        else
+          @image = ChunkyPNG::Image.from_file(image_or_path)
+        end
       else
-        @image = ChunkyPNG::Image.from_file(image_path)
+        raise ArgumentError.new("Image must be a path or a ChunkyPNG::Image object.")
       end
 
       unless @image.width % 8 == 0 && @image.height % 8 == 0
@@ -25,17 +31,14 @@ module Escpos
 
       0.upto(@image.height - 1) do |y|
         0.upto(@image.width - 1) do |x|
-          r, g, b, a =
-            ChunkyPNG::Color.r(@image[x, y]),
-            ChunkyPNG::Color.g(@image[x, y]),
-            ChunkyPNG::Color.b(@image[x, y]),
-            ChunkyPNG::Color.a(@image[x, y])
-          px = (r + g + b) / 3
+          px = ChunkyPNG::Color.to_grayscale(@image.get_pixel(x, y))
+          r, g, b =
+            ChunkyPNG::Color.r(px),
+            ChunkyPNG::Color.g(px),
+            ChunkyPNG::Color.b(px)
+          px = (r + b + g) / 3
           # Alpha is flattened with convert_to_monochrome option
-          unless a == 255
-            raise ArgumentError.new("PNG images with alpha are not supported. Use \"convert_to_monochrome\" to flatten it.")
-          end
-          value = px > 128 ? 255 : 0
+          value = px >= 128 ? 255 : 0
           value = (value << 8) | value
           temp |= mask if value == 0
           mask = mask >> 1
