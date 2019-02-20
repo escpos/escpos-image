@@ -1,15 +1,18 @@
 module Escpos
   class Image
 
-    VERSION = "0.0.4"
+    VERSION = "0.0.5"
 
-    def initialize(image_or_path, opts = {})
+    attr_reader :options
+
+    def initialize(image_or_path, options = {})
+      @options = options
       if image_or_path.is_a?(ChunkyPNG::Image)
         @image = image_or_path
       elsif image_or_path.is_a?(String)
-        if opts.fetch(:convert_to_monochrome, false)
+        if options.fetch(:convert_to_monochrome, false)
           require_mini_magick!
-          image = convert_to_monochrome(image_or_path, opts)
+          image = convert_to_monochrome(image_or_path)
           @image = ChunkyPNG::Image.from_file(image.path)
         else
           @image = ChunkyPNG::Image.from_file(image_or_path)
@@ -38,6 +41,11 @@ module Escpos
             ChunkyPNG::Color.b(px)
           px = (r + b + g) / 3
           # Alpha is flattened with convert_to_monochrome option
+          if options.fetch(:compose_alpha, false)
+            bg_color = options.fetch(:compose_alpha_bg, 255)
+            a_quot = a / 255.0
+            px = (((1 - a_quot) * bg_color) + (a_quot * px)).to_i
+          end
           value = px >= 128 ? 255 : 0
           value = (value << 8) | value
           temp |= mask if value == 0
@@ -79,7 +87,7 @@ module Escpos
       end
     end
 
-    def convert_to_monochrome(image_path, opts = {})
+    def convert_to_monochrome(image_path)
       image = MiniMagick::Image.open(image_path)
 
       # Flatten transparency
@@ -90,10 +98,10 @@ module Escpos
 
       # Optimise more actions to single call
       image.combine_options do |c|
-        c.rotate opts.fetch(:rotate) if opts.has_key?(:rotate)
-        c.resize opts.fetch(:resize) if opts.has_key?(:resize)
+        c.rotate options.fetch(:rotate) if options.has_key?(:rotate)
+        c.resize options.fetch(:resize) if options.has_key?(:resize)
         c.grayscale 'Rec709Luma'
-        if opts.fetch(:dither, true)
+        if options.fetch(:dither, true)
           c.monochrome '+dither'
           # dither the image with FloydSteinberg algoritm for better results
           c.dither 'FloydSteinberg'
@@ -103,7 +111,7 @@ module Escpos
       end
 
       # Limit the extent of the image to nice round numbers
-      if opts.fetch(:extent, true)
+      if options.fetch(:extent, true)
         image.extent "#{(image.width/8.0).round*8}x#{(image.height/8.0).round*8}"
       end
 

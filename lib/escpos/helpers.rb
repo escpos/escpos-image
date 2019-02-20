@@ -1,8 +1,8 @@
 module Escpos
   module Helpers
 
-    def image(path, opts = {})
-      Image.new(path, opts).to_escpos
+    def image(path, options = {})
+      Image.new(path, options).to_escpos
     end
 
   end

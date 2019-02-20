@@ -33,6 +33,8 @@ image = Escpos::Image.new 'path/to/image.png', {
   convert_to_monochrome: true,
   dither: true, # the default
   extent: true, # the default
+  compose_alpha: false, # the default
+  compose_alpha_bg: 255, # default, assume white background
 }
 
 @printer.write image.to_escpos
