@@ -26,15 +26,24 @@ Or install it yourself as:
 
 ```ruby
 @printer = Escpos::Printer.new
-
 image = Escpos::Image.new 'path/to/image.png'
-# to use automatic conversion to monochrome format (requires mini_magick gem) use:
+
+# Recommended usage for best results:
+# Supports all mini_magick formats
+# Converts the image to monochrome, applies dithering and blends alpha
+# Requires the mini_magick gem installed
 image = Escpos::Image.new 'path/to/image.png', {
   convert_to_monochrome: true,
-  dither: true, # the default
-  extent: true, # the default
-  compose_alpha: false, # the default
-  compose_alpha_bg: 255, # default, assume white background
+  dither: true, # default
+  extent: true, # default
+}
+
+# Alternative usage:
+# Supports only PNG images
+# Does NOT require the mini_magick gem installed
+image = Escpos::Image.new 'path/to/image.png', {
+  compose_alpha: true, # default
+  compose_alpha_bg: 255, # default, assumes white background
 }
 
 @printer.write image.to_escpos
