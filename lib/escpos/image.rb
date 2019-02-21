@@ -1,7 +1,7 @@
 module Escpos
   class Image
 
-    VERSION = "0.0.5"
+    VERSION = "0.0.6"
 
     attr_reader :options
 
@@ -35,13 +35,15 @@ module Escpos
       0.upto(@image.height - 1) do |y|
         0.upto(@image.width - 1) do |x|
           px = ChunkyPNG::Color.to_grayscale(@image.get_pixel(x, y))
-          r, g, b =
+          r, g, b, a =
             ChunkyPNG::Color.r(px),
             ChunkyPNG::Color.g(px),
-            ChunkyPNG::Color.b(px)
+            ChunkyPNG::Color.b(px),
+            ChunkyPNG::Color.a(px)
           px = (r + b + g) / 3
           # Alpha is flattened with convert_to_monochrome option
-          if options.fetch(:compose_alpha, false)
+          handled_by_mini_magick = options.fetch(:convert_to_monochrome, false)
+          if !handled_by_mini_magick && options.fetch(:compose_alpha, true)
             bg_color = options.fetch(:compose_alpha_bg, 255)
             a_quot = a / 255.0
             px = (((1 - a_quot) * bg_color) + (a_quot * px)).to_i
