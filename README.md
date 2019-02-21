@@ -26,13 +26,12 @@ Or install it yourself as:
 
 ```ruby
 @printer = Escpos::Printer.new
-image = Escpos::Image.new 'path/to/image.png'
 
 # Recommended usage for best results:
 # Supports all mini_magick formats
 # Converts the image to monochrome, applies dithering and blends alpha
 # Requires the mini_magick gem installed
-image = Escpos::Image.new 'path/to/image.png', {
+image = Escpos::Image.new 'path/to/image.jpg', {
   convert_to_monochrome: true,
   dither: true, # default
   extent: true, # default
