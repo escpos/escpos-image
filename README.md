@@ -38,6 +38,7 @@ image = Escpos::Image.new 'path/to/image.png', {
 }
 
 @printer.write image.to_escpos
+@printer.write image # version 0.0.7 and up
 
 @printer.to_escpos # returns ESC/POS data ready to be sent to printer
 # on linux this can be piped directly to /dev/usb/lp0

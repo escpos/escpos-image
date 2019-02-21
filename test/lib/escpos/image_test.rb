@@ -9,7 +9,7 @@ class ImageTest < Minitest::Test
     image_path = File.join(__dir__, '../../fixtures/tux_mono.png')
     image = Escpos::Image.new image_path
 
-    @printer.write image.to_escpos
+    @printer.write image
     @printer.write "\n" * 10
     @printer.cut!
     image.chunky_png_image.metadata = {}
