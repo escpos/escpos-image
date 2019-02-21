@@ -41,7 +41,7 @@ module Escpos
             ChunkyPNG::Color.b(px)
           px = (r + b + g) / 3
           # Alpha is flattened with convert_to_monochrome option
-          if options.fetch(:compose_alpha, false)
+          if options.fetch(:compose_alpha, true)
             bg_color = options.fetch(:compose_alpha_bg, 255)
             a_quot = a / 255.0
             px = (((1 - a_quot) * bg_color) + (a_quot * px)).to_i
