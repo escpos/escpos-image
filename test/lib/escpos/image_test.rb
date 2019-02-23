@@ -5,9 +5,13 @@ class ImageTest < Minitest::Test
     @printer = Escpos::Printer.new
   end
 
+  # TODO photos of results
+  # TODO USB with option print tests (dev dependency)
+
   def test_image
     image_path = File.join(__dir__, '../../fixtures/tux_mono.png')
-    image = Escpos::Image.new image_path
+    image = Escpos::Image.new image_path,
+      processor: "MiniMagick"
 
     @printer << image
     @printer << "\n" * 10

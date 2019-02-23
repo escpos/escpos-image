@@ -9,7 +9,7 @@ module Escpos
 
   class Image
 
-    VERSION = "0.0.8"
+    VERSION = "0.0.9"
 
     attr_reader :processor, :options
 

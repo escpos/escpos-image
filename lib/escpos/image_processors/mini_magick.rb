@@ -21,7 +21,7 @@ module Escpos
       end
 
       def chunky_png_image
-       ChunkyPNG::Image.from_file @image.path
+        @chunky_png_image ||= ChunkyPNG::Image.from_file @image.path
       end
 
       def assert_options!
