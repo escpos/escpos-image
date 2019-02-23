@@ -27,26 +27,17 @@ Or install it yourself as:
 ```ruby
 @printer = Escpos::Printer.new
 
-# Recommended usage for best results:
-# Supports all mini_magick formats
-# Converts the image to monochrome, applies dithering and blends alpha
-# Requires the mini_magick gem installed
-image = Escpos::Image.new 'path/to/image.jpg', {
-  convert_to_monochrome: true,
-  dither: true, # default
-  extent: true, # default
-}
-
-# Alternative usage:
-# Supports only PNG images
-# Does NOT require the mini_magick gem installed
+# Creating image from path
 image = Escpos::Image.new 'path/to/image.png', {
-  compose_alpha: true, # default
-  compose_alpha_bg: 255, # default, assumes white background
+  processor: "ChunkyPng" # default or MiniMagick
+  # ... other options, see following sections
 }
 
-@printer.write image.to_escpos
-@printer.write image # version 0.0.7 and up
+# The MiniMagick processor requires the mini_magick gem installed
+
+# The constructor also accepts an instance of ChunkyPNG::Image or MiniMagick::Image
+
+@printer << image
 
 @printer.to_escpos # returns ESC/POS data ready to be sent to printer
 # on linux this can be piped directly to /dev/usb/lp0
@@ -55,6 +46,32 @@ image = Escpos::Image.new 'path/to/image.png', {
 
 @printer.to_base64 # returns base64 encoded ESC/POS data
 ```
+
+## Supported  formats
+
+| ChunkyPng | MiniMagick |
+| --- | --- |
+| PNG | PNG, JPG, BMP, ... (everything supported by MiniMagick) |
+
+When using MiniMagick processor, `mini_magick` gem has to be installed or added to the Gemfile, this makes the gem more lightweight by making this dependency optional.
+
+## Image manipulation
+
+All options in the following section are optional and opt-in. By default we only take the RGB value from each pixel, average the sum of the components and make the resulting pixel black if the average is under or equal to 128 and white if it is 129 and up.
+
+## Supported options
+
+| Option | ChunkyPng | MiniMagick | Possible values | Default | Description |
+| --- | :---: | :---: | --- | --- | --- |
+| dither | ❌ | ✅ | true/false | false | Apply [dithering](https://en.wikipedia.org/wiki/Dither) to the image |
+| rotate | ❌ | ✅ | String | none | Apply rotation, accepts any MiniMagick valid string |
+| resize | ❌ | ✅ | String | none | Apply resize, accepts any MiniMagick valid string |
+| grayscale | ✅ | ✅ | true/false | false | Convert image to grayscale (mimics the relative perceptual RGB color sensitivity of the human eye) |
+| extent | ✅ | ✅ | true/false | false | Scale the image to nice round dimensions divisible by 8 (required unless input image meets it) |
+| compose_alpha | ✅ | ✅ | true/false | false | Blend alpha into the image (assumes white background by default) |
+| compose_alpha_bg_r | ✅ | ✅ | 0-255 | 255 | Value of the red component of the background when blending alpha |
+| compose_alpha_bg_g | ✅ | ✅ | 0-255 | 255 | Value of the green component of the background when blending alpha |
+| compose_alpha_bg_b | ✅ | ✅ | 0-255 | 255 | Value of the blue component of the background when blending alpha |
 
 ## Contributing
 
