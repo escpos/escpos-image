@@ -16,8 +16,7 @@ class ImageTest < Minitest::Test
     @printer << image
     @printer << "\n" * 10
     @printer.cut!
-    image.chunky_png_image.metadata = {}
-    image.chunky_png_image.save(File.join(__dir__, "../../results/#{__method__}.png"))
+    image.processor.image.write(File.join(__dir__, "../../results/#{__method__}.png"))
     file = File.join(__dir__, "../../results/#{__method__}.txt")
     #IO.binwrite file, @printer.to_escpos
     assert_equal IO.binread(file), @printer.to_escpos
@@ -26,13 +25,14 @@ class ImageTest < Minitest::Test
   def test_image_conversion
     image_path = File.join(__dir__, '../../fixtures/tux_alpha.png')
     image = Escpos::Image.new image_path, grayscale: true,
-      compose_alpha: true, extent: true
+      compose_alpha: true, extent: true,
+      processor: "ChunkyPng"
 
     @printer << image.to_escpos
     @printer << "\n" * 10
     @printer.cut!
-    image.chunky_png_image.metadata = {}
-    image.chunky_png_image.save(File.join(__dir__, "../../results/#{__method__}.png"))
+    image.processor.image.metadata = {}
+    image.processor.image.save(File.join(__dir__, "../../results/#{__method__}.png"))
     file = File.join(__dir__, "../../results/#{__method__}.txt")
     #IO.binwrite file, @printer.to_escpos
     assert_equal IO.binread(file), @printer.to_escpos

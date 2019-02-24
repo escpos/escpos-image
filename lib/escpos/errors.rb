@@ -12,9 +12,13 @@ module Escpos
     end
   end
 
-  class MiniMagickNotInstalled < LoadError
+  class DependencyNotInstalled < LoadError
+    attr_reader :dependency_name
+    def initialize(dependency_name)
+      @dependency_name = dependency_name
+    end
     def message
-      "Required options need the mini_magick gem installed: #{e}."
+      "Required options need the \"#{@dependency_name}\" gem installed."
     end
   end
 

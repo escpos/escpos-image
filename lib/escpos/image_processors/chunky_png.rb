@@ -5,6 +5,8 @@ module Escpos
     class ChunkyPng < Base
 
       def initialize(image_or_path, options = {})
+        require_chunky_png!
+
         @image = begin
           if image_or_path.is_a?(ChunkyPNG::Image)
             image_or_path
@@ -18,12 +20,28 @@ module Escpos
         super
       end
 
-      def chunky_png_image
-        @image
-      end
-
       def assert_options!
         assert_dimensions_multiple_of_8!
+      end
+
+      # ChunkyPng gem is not required intentionally
+      # This makes the gem more lightweight by making dependencies
+      # optional and based on chosen image processor
+      def require_chunky_png!
+        return if defined?(::ChunkyPng)
+        require "chunky_png"
+        rescue LoadError => e
+          raise DependencyNotInstalled.new("chunky_png")
+      end
+
+      def get_pixel(x, y)
+        px = image.get_pixel x, y
+        r, g, b =
+          ChunkyPNG::Color.r(px),
+          ChunkyPNG::Color.g(px),
+          ChunkyPNG::Color.b(px)
+
+        (r + b + g) / 3
       end
 
       def process!

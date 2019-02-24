@@ -20,8 +20,15 @@ module Escpos
         super
       end
 
-      def chunky_png_image
-        @chunky_png_image ||= ChunkyPNG::Image.from_file @image.path
+      def get_pixel(x, y)
+        @pixels ||= image.get_pixels
+
+        r, g, b =
+          @pixels[y][x][0],
+          @pixels[y][x][1],
+          @pixels[y][x][2]
+
+        (r + b + g) / 3
       end
 
       def assert_options!
@@ -29,12 +36,13 @@ module Escpos
       end
 
       # MiniMagick gem is not required intentionally
-      # This makes the gem more lightweight by making this dependency optional
+      # This makes the gem more lightweight by making dependencies
+      # optional and based on chosen image processor
       def require_mini_magick!
         return if defined?(::MiniMagick)
         require "mini_magick"
         rescue LoadError => e
-          raise MiniMagickNotInstalled
+          raise DependencyNotInstalled.new("mini_magick")
       end
 
       def process!
@@ -70,9 +78,6 @@ module Escpos
         if options.fetch(:extent, false)
           image.extent "#{(image.width/8.0).round*8}x#{(image.height/8.0).round*8}"
         end
-
-        # Force PNG format so ChunkyPNG works
-        image.format 'png'
       end
 
     end

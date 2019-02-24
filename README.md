@@ -4,10 +4,15 @@ A ruby implementation of ESC/POS (thermal) printer image command specification.
 
 ## Installation
 
-Add this line to your application's Gemfile:
+Add this lines to your application's Gemfile:
 
 ```ruby
 gem 'escpos-image'
+
+# Depending on chosen image processor
+gem 'mini_magick'
+# or
+gem 'chunky_png'
 ```
 
 And then execute:
@@ -18,6 +23,13 @@ Or install it yourself as:
 
     $ gem install escpos-image
 
+And then depending on chosen image processor
+
+    $ gem install mini_magick
+
+or
+
+    $ gem install chunky_png
 ## Examples
 
 ![](https://github.com/escpos/escpos-image/blob/master/examples/IMG_20160610_232415_HDR.jpg)
@@ -29,13 +41,17 @@ Or install it yourself as:
 
 # Creating image from path
 image = Escpos::Image.new 'path/to/image.png', {
-  processor: "ChunkyPng" # default or MiniMagick
+  processor: "ChunkyPng" # or MiniMagick
   # ... other options, see following sections
 }
 
+# The ChunkyPng processor requires the chunky_png gem installed
 # The MiniMagick processor requires the mini_magick gem installed
 
-# The constructor also accepts an instance of ChunkyPNG::Image or MiniMagick::Image
+# The constructor accepts an instance of:
+# - String (path to image)
+# - ChunkyPNG::Image
+# - MiniMagick::Image
 
 @printer << image
 
@@ -53,7 +69,7 @@ image = Escpos::Image.new 'path/to/image.png', {
 | --- | --- |
 | PNG | PNG, JPG, BMP, ... (everything supported by MiniMagick) |
 
-When using MiniMagick processor, `mini_magick` gem has to be installed or added to the Gemfile, this makes the gem more lightweight by making this dependency optional.
+When using `ChunkyPng` processor, `chunky_png` gem has to be installed or added to the Gemfile and when using `MiniMagick` processor, `mini_magick` gem has to be installed or added to the Gemfile, this makes the gem more lightweight by making dependencies optional and based on chosen image processor.
 
 ## Image manipulation
 

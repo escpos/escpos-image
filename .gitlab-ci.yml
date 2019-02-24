@@ -13,6 +13,7 @@ before_script:
   - bundle install --jobs $(nproc) --path vendor
   - apt-get install -y imagemagick
   - gem install mini_magick
+  - gem install chunky_png
 
 test:
   stage: test
