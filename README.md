@@ -1,3 +1,5 @@
+[Build Status](https://gitlab.com/escpos/escpos-image/pipelines)
+
 # Escpos-image
 
 A ruby implementation of ESC/POS (thermal) printer image command specification.
