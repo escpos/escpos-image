@@ -1,6 +1,7 @@
 require_relative '../../test_helper'
 
 class ImageTest < Minitest::Test
+
   def setup
     @printer = Escpos::Printer.new
   end
@@ -15,7 +16,8 @@ class ImageTest < Minitest::Test
     @printer.cut!
     image.processor.image.write(File.join(__dir__, "../../results/#{__method__}.png"))
     file = File.join(__dir__, "../../results/#{__method__}.txt")
-    #IO.binwrite file, @printer.to_escpos
+    #@printer.save file
+
     assert_equal IO.binread(file), @printer.to_escpos
   end
 
@@ -31,7 +33,8 @@ class ImageTest < Minitest::Test
     image.processor.image.metadata = {}
     image.processor.image.save(File.join(__dir__, "../../results/#{__method__}.png"))
     file = File.join(__dir__, "../../results/#{__method__}.txt")
-    #IO.binwrite file, @printer.to_escpos
+    #@printer.save file
+
     assert_equal IO.binread(file), @printer.to_escpos
   end
 
