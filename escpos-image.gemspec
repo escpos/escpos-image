@@ -26,5 +26,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "mini_magick"
   spec.add_development_dependency "chunky_png"
 
-  spec.add_dependency "escpos", ">= 0.0.9"
+  spec.add_dependency "escpos", ">= 0.0.10"
 end

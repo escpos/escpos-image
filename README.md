@@ -69,7 +69,7 @@ image = Escpos::Image.new 'path/to/image.png', {
 
 | ChunkyPng | MiniMagick |
 | --- | --- |
-| PNG | PNG, JPG, BMP, ... (everything supported by MiniMagick) |
+| PNG | PNG, JPG, GIF, BMP, TIF, PCX, ... (everything supported by MiniMagick) |
 
 When using `ChunkyPng` processor, `chunky_png` gem has to be installed or added to the Gemfile and when using `MiniMagick` processor, `mini_magick` gem has to be installed or added to the Gemfile, this makes the gem more lightweight by making dependencies optional and based on chosen image processor.
 
