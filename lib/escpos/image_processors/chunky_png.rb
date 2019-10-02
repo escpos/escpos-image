@@ -32,8 +32,8 @@ module Escpos
       def require_chunky_png!
         return if defined?(::ChunkyPng)
         require "chunky_png"
-        rescue LoadError => e
-          raise DependencyNotInstalled.new("chunky_png")
+      rescue LoadError => e
+        raise DependencyNotInstalled.new("chunky_png")
       end
 
       def get_pixel(x, y)

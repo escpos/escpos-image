@@ -43,8 +43,8 @@ module Escpos
       def require_mini_magick!
         return if defined?(::MiniMagick)
         require "mini_magick"
-        rescue LoadError => e
-          raise DependencyNotInstalled.new("mini_magick")
+      rescue LoadError => e
+        raise DependencyNotInstalled.new("mini_magick")
       end
 
       def process!
