@@ -8,8 +8,10 @@ class ImageTest < Minitest::Test
 
   def test_image
     image_path = File.join(__dir__, '../../fixtures/tux_mono.png')
-    image = Escpos::Image.new image_path,
+    image_file = File.new image_path
+    image = Escpos::Image.new image_file,
       processor: "MiniMagick"
+    image_file.close
 
     @printer << image
     @printer << "\n" * 10

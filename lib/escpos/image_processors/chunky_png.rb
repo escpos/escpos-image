@@ -10,6 +10,8 @@ module Escpos
         @image = begin
           if image_or_path.is_a?(ChunkyPNG::Image)
             image_or_path
+          elsif image_or_path.is_a?(File)
+            ChunkyPNG::Image.from_file(image_or_path.path)
           elsif image_or_path.is_a?(String)
             ChunkyPNG::Image.from_file(image_or_path)
           else

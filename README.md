@@ -52,6 +52,7 @@ image = Escpos::Image.new 'path/to/image.png', {
 
 # The constructor accepts an instance of:
 # - String (path to image)
+# - File
 # - ChunkyPNG::Image
 # - MiniMagick::Image
 

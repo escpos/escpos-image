@@ -10,6 +10,8 @@ module Escpos
         @image = begin
           if image_or_path.is_a?(::MiniMagick::Image)
             image_or_path
+          elsif image_or_path.is_a?(File)
+             ::MiniMagick::Image.open(image_or_path.path)
           elsif image_or_path.is_a?(String)
             ::MiniMagick::Image.open(image_or_path)
           else
