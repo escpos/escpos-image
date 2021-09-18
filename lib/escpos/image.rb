@@ -16,7 +16,7 @@ module Escpos
     def initialize(image_or_path, options = {})
       @options = options
 
-      processor_klass = get_processor_klass(options[:processor])
+      processor_klass = get_processor_klass(image_or_path, options[:processor])
       @processor = processor_klass.new(image_or_path, options)
 
       @processor.process!
@@ -54,7 +54,12 @@ module Escpos
 
     private
 
-    def get_processor_klass(processor)
+    def get_processor_klass(image, processor)
+      case image
+      when ::MiniMagick::Image then return ImageProcessors::MiniMagick
+      when ::ChunkyPng::Image then return ImageProcessors::ChunkyPng
+      end
+
       return default_processor_klass unless processor
 
       case processor.to_s.downcase.gsub(/[_-]/, '')
