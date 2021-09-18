@@ -16,9 +16,8 @@ module Escpos
     def initialize(image_or_path, options = {})
       @options = options
 
-      processor_klass_name = options.fetch(:processor)
-      processor_klass = ImageProcessors.const_get(processor_klass_name)
-      @processor = processor_klass.new image_or_path, options
+      processor_klass = get_processor_klass(options[:processor])
+      @processor = processor_klass.new(image_or_path, options)
 
       @processor.process!
     end
@@ -53,5 +52,26 @@ module Escpos
       ].join
     end
 
+    private
+
+    def get_processor_klass(processor)
+      return default_processor_klass unless processor
+
+      case processor.to_s.downcase.gsub(/[_-]/, '')
+      when 'minimagick' then ImageProcessors::MiniMagick
+      when 'chunkypng' then ImageProcessors::ChunkyPng
+      else raise("Escpos:Image unknown processor value #{processor.inspect}")
+      end
+    end
+
+    def default_processor_klass
+      if defined?(MiniMagick)
+        ImageProcessors::MiniMagick
+      elsif defined?(ChunkyPNG)
+        ImageProcessors::ChunkyPng
+      else
+        raise('Escpos:Image requires either mini_magick or chunky_png gem.')
+      end
+    end
   end
 end

@@ -40,4 +40,10 @@ class ImageTest < Minitest::Test
     assert_equal IO.binread(file), @printer.to_escpos
   end
 
+  def test_default_processor_klass
+    image_path = File.join(__dir__, '../../fixtures/tux_alpha.png')
+    image = Escpos::Image.new image_path, grayscale: true,
+                              compose_alpha: true, extent: true
+    assert_equal image.processor.class, Escpos::ImageProcessors::MiniMagick
+  end
 end
