@@ -40,7 +40,20 @@ class ImageTest < Minitest::Test
     assert_equal IO.binread(file), @printer.to_escpos
   end
 
-  def test_default_processor_klass
+  def test_processor_chunky_png_image
+    image = Escpos::Image.new ChunkyPNG::Image.new(8, 8), grayscale: true,
+                              compose_alpha: true, extent: true
+    assert_equal image.processor.class, Escpos::ImageProcessors::ChunkyPng
+  end
+
+  def test_processor_mini_magick_image
+    image_path = File.join(__dir__, '../../fixtures/tux_mono.png')
+    image = Escpos::Image.new MiniMagick::Image.new(image_path), grayscale: true,
+                              compose_alpha: true, extent: true
+    assert_equal image.processor.class, Escpos::ImageProcessors::MiniMagick
+  end
+
+  def test_processor_default
     image_path = File.join(__dir__, '../../fixtures/tux_alpha.png')
     image = Escpos::Image.new image_path, grayscale: true,
                               compose_alpha: true, extent: true

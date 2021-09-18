@@ -55,10 +55,8 @@ module Escpos
     private
 
     def get_processor_klass(image, processor)
-      case image
-      when ::MiniMagick::Image then return ImageProcessors::MiniMagick
-      when ::ChunkyPng::Image then return ImageProcessors::ChunkyPng
-      end
+      klass = get_processor_klass_from_image(image)
+      return klass if klass
 
       return default_processor_klass unless processor
 
@@ -66,6 +64,13 @@ module Escpos
       when 'minimagick' then ImageProcessors::MiniMagick
       when 'chunkypng' then ImageProcessors::ChunkyPng
       else raise("Escpos:Image unknown processor value #{processor.inspect}")
+      end
+    end
+
+    def get_processor_klass_from_image(image)
+      case image
+      when ::MiniMagick::Image then ImageProcessors::MiniMagick
+      when ::ChunkyPNG::Image then ImageProcessors::ChunkyPng
       end
     end
 
