@@ -44,7 +44,7 @@ or
 
 # Creating image from path
 image = Escpos::Image.new 'path/to/image.png', {
-  processor: "ChunkyPng" # or MiniMagick
+  processor: :chunky_png # or :mini_magick
   # ... other options, see following sections
 }
 
