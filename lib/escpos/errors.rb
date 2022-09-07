@@ -8,7 +8,7 @@ module Escpos
 
   class InputNotSupported < ArgumentError
     def message
-      "Image must be a path or an instance of ChunkyPNG::Image or MiniMagick::Image."
+      "Image must be a path or an instance of e.g. ChunkyPNG::Image, MiniMagick::Image or other supported processor. See readme for details."
     end
   end
 
